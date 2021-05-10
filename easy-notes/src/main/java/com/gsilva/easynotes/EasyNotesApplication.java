@@ -8,9 +8,7 @@ import static org.springframework.boot.SpringApplication.run;
 @SpringBootApplication
 @EnableJpaAuditing
 public class EasyNotesApplication {
-
 	public static void main(String[] args) {
 		run(EasyNotesApplication.class, args);
 	}
-
 }

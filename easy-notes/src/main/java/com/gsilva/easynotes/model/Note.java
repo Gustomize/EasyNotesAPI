@@ -18,7 +18,6 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 public class Note implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -41,6 +40,13 @@ public class Note implements Serializable {
     @LastModifiedDate
     private Date updatedAt;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -57,5 +63,4 @@ public class Note implements Serializable {
     public void setContent(String content) {
         this.content = content;
     }
-
 }
