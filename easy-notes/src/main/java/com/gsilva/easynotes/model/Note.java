@@ -1,17 +1,21 @@
 package com.gsilva.easynotes.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 
 import static javax.persistence.GenerationType.IDENTITY;
-import static javax.persistence.TemporalType.TIMESTAMP;
 
 @Entity
 @Table(name = "notes")
@@ -31,13 +35,11 @@ public class Note implements Serializable {
     private String content;
 
     @Column(nullable = false, updatable = false)
-    @Temporal(TIMESTAMP)
-    @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @Column(nullable = false)
-    @Temporal(TIMESTAMP)
-    @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
     public long getId() {
@@ -62,5 +64,21 @@ public class Note implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
