@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+  api:
+    build: .
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
+    links:
+      - mariadb:database
+  mariadb:
+    image: mariadb:10.7
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_DATABASE: notes-api

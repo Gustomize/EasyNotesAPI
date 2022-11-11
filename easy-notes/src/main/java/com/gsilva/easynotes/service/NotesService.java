@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 public class NotesService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(NotesController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NotesService.class);
 
     private final NoteRepository repository;
 
@@ -32,6 +32,7 @@ public class NotesService {
     public Note createNote(Note note) {
         LOG.info("Salvando nota '{}'", note.getTitle());
         note.setCreatedAt(new Date());
+        note.setUpdatedAt(note.getCreatedAt());
         return repository.save(note);
     }
 

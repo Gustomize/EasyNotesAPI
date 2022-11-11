@@ -60,7 +60,7 @@ public class NotesController {
     }
 
     @PutMapping("/notes/{id}")
-    public ResponseEntity<NoteDto> updateNote(@PathVariable(value = "id") Long id, @Valid NoteForm form) {
+    public ResponseEntity<NoteDto> updateNote(@PathVariable(value = "id") Long id, @Valid @RequestBody NoteForm form) {
         return ResponseEntity.ok(toDto(notesService.updateNote(id, form)));
     }
 
