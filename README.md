@@ -1,6 +1,6 @@
 # Easy notes API <!-- omit from toc -->
 
-Api REST com um CRUD de notas usando Spring Boot e com MariaDB. Esse projeto foi feito para estudar Spring Hateoas.
+Api REST de CRUD de notas usando Spring Boot e MariaDB. Projeto feito para estudar Spring Hateoas.
 
 ## Tabela de Conteúdos <!-- omit from toc -->
 
