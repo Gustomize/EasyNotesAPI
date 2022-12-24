@@ -1,6 +1,5 @@
 package com.gsilva.easynotes.dto;
 
-
 import javax.validation.constraints.NotBlank;
 
 public class NoteForm {

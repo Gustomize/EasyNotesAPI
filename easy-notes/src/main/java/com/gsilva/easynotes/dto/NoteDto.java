@@ -1,6 +1,7 @@
 package com.gsilva.easynotes.dto;
 
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.lang.Nullable;
 
 public class NoteDto extends RepresentationModel<NoteDto> {
 
@@ -21,6 +22,16 @@ public class NoteDto extends RepresentationModel<NoteDto> {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return super.equals(obj);
     }
 
 }

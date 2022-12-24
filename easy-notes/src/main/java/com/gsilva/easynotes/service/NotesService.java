@@ -1,26 +1,26 @@
 package com.gsilva.easynotes.service;
 
-import com.gsilva.easynotes.controller.NotesController;
 import com.gsilva.easynotes.dto.NoteForm;
+import com.gsilva.easynotes.exception.NotaNaoEncontradaException;
 import com.gsilva.easynotes.model.Note;
 import com.gsilva.easynotes.repository.NoteRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class NotesService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(NotesService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NotesService.class.getName());
 
     private final NoteRepository repository;
 
-    @Autowired
     public NotesService(NoteRepository repository) {
         this.repository = repository;
     }
@@ -30,9 +30,10 @@ public class NotesService {
     }
 
     public Note createNote(Note note) {
-        LOG.info("Salvando nota '{}'", note.getTitle());
+        LOGGER.info("Salvando nota '{}'", note.getTitle());
+
         note.setCreatedAt(new Date());
-        note.setUpdatedAt(note.getCreatedAt());
+
         return repository.save(note);
     }
 
@@ -44,14 +45,14 @@ public class NotesService {
         Note note = repository.findById(id).orElse(null);
 
         if (note == null) {
-            throw new NullPointerException();
+            throw new NotaNaoEncontradaException("Nota não encontrada");
         }
 
         note.setTitle(form.getTitle());
         note.setContent(form.getContent());
         note.setUpdatedAt(new Date());
 
-        LOG.info("Alterando nota {} para {}", note.getTitle(), form.getContent());
+        LOGGER.info("Alterando nota {} para {}", note.getTitle(), form.getContent());
 
         return repository.save(note);
     }
@@ -60,10 +61,10 @@ public class NotesService {
         Note note = repository.findById(id).orElse(null);
 
         if (note == null) {
-            throw new NullPointerException();
+            throw new NotaNaoEncontradaException("Nota não encontrada");
         }
 
-        LOG.info("Removendo nota {}", note.getTitle());
+        LOGGER.info("Removendo nota {}", note.getTitle());
 
         repository.delete(note);
     }

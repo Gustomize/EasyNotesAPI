@@ -1,6 +1,7 @@
 package com.gsilva.easynotes.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import static javax.persistence.GenerationType.IDENTITY;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
@@ -14,8 +15,6 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
-
-import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "notes")
@@ -38,7 +37,6 @@ public class Note implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
