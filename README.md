@@ -26,10 +26,10 @@ Api REST de CRUD de notas usando Spring Boot e MariaDB. Projeto feito para estud
     - [GET](#get-2)
       - [Responses](#responses-5)
 - [Pré-requisitos e como rodar a aplicação/testes](#pré-requisitos-e-como-rodar-a-aplicaçãotestes)
-  - [Tecnologias utilizadas](#tecnologias-utilizadas)
-  - [Dependencias](#dependencias)
-  - [Licença](#licença)
-  - [Autor](#autor)
+- [Tecnologias utilizadas](#tecnologias-utilizadas)
+- [Dependencias](#dependencias)
+- [Licença](#licença)
+- [Autor](#autor)
 
 ## Features
 
@@ -301,8 +301,6 @@ components:
 
 Coleção para testar os endpoints da aplicação
 
-
-
 [![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=easy-notes-api&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fgasfgrv%2Feasy-notes-api%2Fmaster%2Feasy-notes%2Fcollection.json)
 
 ## Pré-requisitos e como rodar a aplicação/testes
@@ -315,6 +313,8 @@ services:
   mariadb:
     image: mariadb:10.7
     restart: always
+    networks:
+      - easy-notes-network
     ports:
       - "3306:3306"
     environment:
@@ -322,6 +322,10 @@ services:
       MYSQL_PASSWORD: root
       MYSQL_USER: root
       MYSQL_DATABASE: notes-api
+
+networks:
+  easy-notes-network:
+    driver: bridge
 ```
 Rodar os seguintes comados
 
@@ -333,17 +337,17 @@ docker-compose up -d
 docker pull gustosilva/easy-notes-api:latest
 
 # Gerar o containter
-docker run gustosilva/easy-notes-api:latest -d -p 8080:8080 \
-    --env DB_USER=[DB_USER] \
-    --env DB_PASSWORD=[DB_PASSWORD] 
-
+docker run --network easy-notes_easy-notes-network \
+  --env DB_USER=root \
+  --env DB_PASSWORD=root \
+  -p 8080:8080 gustosilva/easy-notes-api:latest
 ```
 
-### Tecnologias utilizadas
+## Tecnologias utilizadas
 
 Projeto feito usando **Java 1.8** e **Maven 3.8** como ferramenta de build.
 
-### Dependencias
+## Dependencias
 
 - spring-boot-starter-data-jpa
 - spring-boot-starter-web
@@ -358,11 +362,11 @@ Projeto feito usando **Java 1.8** e **Maven 3.8** como ferramenta de build.
 - modelmapper
 - springdoc-openapi-ui
 
-### Licença
+## Licença
 
 [Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
-### Autor
+## Autor
 
 <div>
     <img style="border-radius: 10%; float: left; margin-right: 20px" src="https://avatars.githubusercontent.com/u/34608751?v=4" width="100px;" alt=""/>
@@ -372,3 +376,4 @@ Projeto feito usando **Java 1.8** e **Maven 3.8** como ferramenta de build.
     <br>
     <a href="mailto:gustavoalmeidasilva41@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" height=25></a>
     <a href="mailto:gustavo_almeida11@hotmail.com"><img src="https://img.shields.io/badge/Microsoft_Outlook-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white" height=25></a>
+</div>
