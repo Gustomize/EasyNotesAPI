@@ -1,17 +1,10 @@
 version: "3.7"
 services:
-  api:
-    build: .
-    restart: always
-    ports:
-      - "8080:8080"
-    depends_on:
-      - mariadb
-    links:
-      - mariadb:database
   mariadb:
     image: mariadb:10.7
     restart: always
+    networks:
+      - easy-notes-network
     ports:
       - "3306:3306"
     environment:
@@ -19,3 +12,7 @@ services:
       MYSQL_PASSWORD: root
       MYSQL_USER: root
       MYSQL_DATABASE: notes-api
+
+networks:
+  easy-notes-network:
+    driver: bridge
