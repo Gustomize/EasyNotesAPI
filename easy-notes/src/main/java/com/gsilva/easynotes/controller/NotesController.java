@@ -3,13 +3,14 @@ package com.gsilva.easynotes.controller;
 import com.gsilva.easynotes.dto.NoteDetailsDto;
 import com.gsilva.easynotes.dto.NoteDto;
 import com.gsilva.easynotes.dto.NoteForm;
+import com.gsilva.easynotes.mapper.NotesMapper;
 import com.gsilva.easynotes.model.Note;
 import com.gsilva.easynotes.service.NotesService;
-import org.modelmapper.ModelMapper;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,26 +21,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/v1/notes")
 public class NotesController {
 
-    private final ModelMapper modelMapper;
+    private final NotesMapper notesMapper;
     private final NotesService notesService;
 
-    public NotesController(ModelMapper modelMapper, NotesService notesService) {
-        this.modelMapper = modelMapper;
+    public NotesController(NotesMapper notesMapper, NotesService notesService) {
+        this.notesMapper = notesMapper;
         this.notesService = notesService;
     }
 
-    @GetMapping("/notes")
+    @GetMapping
     public ResponseEntity<CollectionModel<NoteDto>> getAllNotes() {
         List<NoteDto> dtoList = notesService.getAllNotes().stream()
-                .map(this::toDto)
+                .map(notesMapper::toDto)
                 .collect(Collectors.toList());
 
         Link todasAsNotasLink = linkTo(methodOn(NotesController.class).getAllNotes()).withSelfRel();
@@ -47,52 +47,30 @@ public class NotesController {
         return ResponseEntity.ok(CollectionModel.of(dtoList, todasAsNotasLink));
     }
 
-    @PostMapping("/notes")
+    @PostMapping
     public ResponseEntity<NoteDto> createNote(@Valid @RequestBody NoteForm form) {
-        Note note = notesService.createNote(toModel(form));
+        Note note = notesService.createNote(notesMapper.toModel(form));
 
-        return ResponseEntity.ok(toDto(note));
+        return ResponseEntity.ok(notesMapper.toDto(note));
     }
 
-    @GetMapping("/notes/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<NoteDetailsDto> getNoteById(@PathVariable(value = "id") Long id) {
         return notesService.getNoteById(id)
-                .map(value -> ResponseEntity.ok(toDetails(value)))
+                .map(value -> ResponseEntity.ok(notesMapper.toDetails(value)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/notes/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<NoteDto> updateNote(@PathVariable(value = "id") Long id, @Valid @RequestBody NoteForm form) {
-        return ResponseEntity.ok(toDto(notesService.updateNote(id, form)));
+        return ResponseEntity.ok(notesMapper.toDto(notesService.updateNote(id, form)));
     }
 
-    @DeleteMapping("/notes/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNote(@PathVariable(value = "id") Long id) {
         notesService.deleteNote(id);
 
         return ResponseEntity.noContent().build();
-    }
-
-    private NoteDto toDto(Note note) {
-        NoteDto dto = modelMapper.map(note, NoteDto.class);
-
-        dto.add(linkTo(methodOn(NotesController.class).getNoteById(note.getId())).withSelfRel());
-
-        return dto;
-    }
-
-    private NoteDetailsDto toDetails(Note note) {
-        NoteDetailsDto dto = modelMapper.map(note, NoteDetailsDto.class);
-
-        dto.add(linkTo(methodOn(NotesController.class).getNoteById(note.getId())).withSelfRel());
-
-        dto.add(linkTo(methodOn(NotesController.class).getAllNotes()).withRel("todasAsNotas"));
-
-        return dto;
-    }
-
-    private Note toModel(NoteForm form) {
-        return modelMapper.map(form, Note.class);
     }
 
 }
