@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+env:
+  DOCKER_USER: ${{secrets.DOCKER_USER}}
+  DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Definir JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: "8"
+          distribution: "oracle"
+          cache: maven
+
+      - name: build do projeto
+        run: mvn -B clean package -DskipTests --file pom.xml
+
+      - name: docker build
+        run: docker build -t gustosilva/easy-notes-api .
+
+      - name: docker login
+        run: docker login -u ${{env.DOCKER_USER}} -p ${{env.DOCKER_TOKEN}}
+
+      - name: docker tag
+        run: docker tag $(docker images --filter=reference='gustosilva/easy-notes-api' --format "{{.ID}}") gustosilva/easy-notes-api
+
+      - name: docker push
+        run: docker push gustosilva/easy-notes-api
+
+      - name: docker sync
+        uses: ms-jpq/sync-dockerhub-readme@v1
+        with:
+          username: ${{env.DOCKER_USER}}
+          password: ${{env.DOCKER_TOKEN}}
+          repository: gustosilva/easy-notes-api
+          readme: "./README.md"
+
+      - name: docker logout
+        run: docker logout
