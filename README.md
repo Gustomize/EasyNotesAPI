@@ -2,35 +2,6 @@
 
 Api REST de CRUD de notas usando Spring Boot e MariaDB. Projeto feito para estudar Spring Hateoas.
 
-## Tabela de Conteúdos <!-- omit from toc -->
-
-- [Features](#features)
-- [Contrato da API](#contrato-da-api)
-- [Endpoints da Aplicação](#endpoints-da-aplicação)
-  - [/api/notes/{id}](#apinotesid)
-    - [GET](#get)
-      - [Parameters](#parameters)
-      - [Responses](#responses)
-    - [PUT](#put)
-      - [Parameters](#parameters-1)
-      - [Responses](#responses-1)
-    - [DELETE](#delete)
-      - [Parameters](#parameters-2)
-      - [Responses](#responses-2)
-  - [/api/notes](#apinotes)
-    - [GET](#get-1)
-      - [Responses](#responses-3)
-    - [POST](#post)
-      - [Responses](#responses-4)
-  - [/api](#api)
-    - [GET](#get-2)
-      - [Responses](#responses-5)
-- [Pré-requisitos e como rodar a aplicação/testes](#pré-requisitos-e-como-rodar-a-aplicaçãotestes)
-- [Tecnologias utilizadas](#tecnologias-utilizadas)
-- [Dependencias](#dependencias)
-- [Licença](#licença)
-- [Autor](#autor)
-
 ## Features
 
 - [x] Crud completo de notas
@@ -44,23 +15,23 @@ info:
   title: OpenAPI definition
   version: v0
 servers:
-  - url: http://localhost:8080/
-    description: Generated server url
+- url: http://localhost:8080
+  description: Generated server url
 paths:
-  /api/notes/{id}:
+  /v1/notes/{id}:
     get:
       tags:
-        - notes-controller
+      - notes-controller
       operationId: getNoteById
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             '*/*':
@@ -68,15 +39,15 @@ paths:
                 $ref: '#/components/schemas/NoteDetailsDto'
     put:
       tags:
-        - notes-controller
+      - notes-controller
       operationId: updateNote
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
       requestBody:
         content:
           application/json:
@@ -84,7 +55,7 @@ paths:
               $ref: '#/components/schemas/NoteForm'
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
             '*/*':
@@ -92,25 +63,25 @@ paths:
                 $ref: '#/components/schemas/NoteDto'
     delete:
       tags:
-        - notes-controller
+      - notes-controller
       operationId: deleteNote
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
       responses:
-        '200':
+        "200":
           description: OK
-  /api/notes:
+  /v1/notes:
     get:
       tags:
-        - notes-controller
+      - notes-controller
       operationId: getAllNotes
       responses:
-        '200':
+        "200":
           description: OK
           content:
             '*/*':
@@ -118,7 +89,7 @@ paths:
                 $ref: '#/components/schemas/CollectionModelNoteDto'
     post:
       tags:
-        - notes-controller
+      - notes-controller
       operationId: createNote
       requestBody:
         content:
@@ -127,19 +98,19 @@ paths:
               $ref: '#/components/schemas/NoteForm'
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
             '*/*':
               schema:
                 $ref: '#/components/schemas/NoteDto'
-  /api:
+  /v1:
     get:
       tags:
-        - root-controller
+      - root-controller
       operationId: root
       responses:
-        '200':
+        "200":
           description: OK
           content:
             '*/*':
@@ -149,8 +120,8 @@ components:
   schemas:
     NoteForm:
       required:
-        - content
-        - title
+      - content
+      - title
       type: object
       properties:
         title:
@@ -227,7 +198,7 @@ components:
 ```
 ## Endpoints da Aplicação
 
-### /api/notes/{id}
+### /v1/notes/{id}
 
 #### GET
 
@@ -271,7 +242,7 @@ components:
 | ---- | ----------- |
 | 200  | OK          |
 
-### /api/notes
+### /v1/notes
 
 #### GET
 
@@ -289,7 +260,7 @@ components:
 | ---- | ----------- |
 | 200  | OK          |
 
-### /api
+### /v1
 
 #### GET
 
@@ -311,8 +282,9 @@ Criar arquivo docker-compose.yaml:
 version: "3.7"
 services:
   mariadb:
+    container_name: notes_db
     image: mariadb:10.7
-    restart: always
+    restart: unless-stopped
     networks:
       - easy-notes-network
     ports:
@@ -362,18 +334,12 @@ Projeto feito usando **Java 1.8** e **Maven 3.8** como ferramenta de build.
 - modelmapper
 - springdoc-openapi-ui
 
-## Licença
-
-[Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-
 ## Autor
 
 <div>
-    <img style="border-radius: 10%; float: left; margin-right: 20px" src="https://avatars.githubusercontent.com/u/34608751?v=4" width="100px;" alt=""/>
     <p>Feito por Gustavo Silva:</p>
     <a href="https://www.linkedin.com/in/gustavo-silva-69b84a15b/"><img src="https://img.shields.io/badge/linkedin-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white" height=25></a>
     <a href="https://discordapp.com/users/616994765065420801"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" height=25></a>
-    <br>
     <a href="mailto:gustavoalmeidasilva41@gmail.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" height=25></a>
     <a href="mailto:gustavo_almeida11@hotmail.com"><img src="https://img.shields.io/badge/Microsoft_Outlook-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white" height=25></a>
 </div>

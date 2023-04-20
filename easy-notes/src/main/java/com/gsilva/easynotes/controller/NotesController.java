@@ -6,6 +6,8 @@ import com.gsilva.easynotes.dto.NoteForm;
 import com.gsilva.easynotes.mapper.NotesMapper;
 import com.gsilva.easynotes.model.Note;
 import com.gsilva.easynotes.service.NotesService;
+
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -38,20 +40,24 @@ public class NotesController {
 
     @GetMapping
     public ResponseEntity<CollectionModel<NoteDto>> getAllNotes() {
-        List<NoteDto> dtoList = notesService.getAllNotes().stream()
+        List<NoteDto> dtoList = notesService.getAllNotes()
+                .stream()
                 .map(notesMapper::toDto)
                 .collect(Collectors.toList());
-
-        Link todasAsNotasLink = linkTo(methodOn(NotesController.class).getAllNotes()).withSelfRel();
-
+        Link todasAsNotasLink = linkTo(methodOn(NotesController.class)
+                .getAllNotes())
+                .withSelfRel();
         return ResponseEntity.ok(CollectionModel.of(dtoList, todasAsNotasLink));
     }
 
     @PostMapping
     public ResponseEntity<NoteDto> createNote(@Valid @RequestBody NoteForm form) {
         Note note = notesService.createNote(notesMapper.toModel(form));
-
-        return ResponseEntity.ok(notesMapper.toDto(note));
+        NoteDto dto = notesMapper.toDto(note);
+        URI uri = dto.getLink("self")
+                .orElseThrow(NullPointerException::new)
+                .toUri();
+        return ResponseEntity.created(uri).body(dto);
     }
 
     @GetMapping("/{id}")
@@ -69,7 +75,6 @@ public class NotesController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNote(@PathVariable(value = "id") Long id) {
         notesService.deleteNote(id);
-
         return ResponseEntity.noContent().build();
     }
 

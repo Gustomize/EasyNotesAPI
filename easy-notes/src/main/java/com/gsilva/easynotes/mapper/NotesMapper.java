@@ -22,7 +22,8 @@ public class NotesMapper {
 
     public NoteDto toDto(Note note) {
         return modelMapper.map(note, NoteDto.class)
-                .add(linkTo(methodOn(NotesController.class).getNoteById(note.getId())).withSelfRel());
+                .add(linkTo(methodOn(NotesController.class).getNoteById(note.getId())).withSelfRel())
+                .add(linkTo(methodOn(NotesController.class).getAllNotes()).withRel("all-notes"));
     }
 
     public NoteDetailsDto toDetails(Note note) {

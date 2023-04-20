@@ -14,7 +14,9 @@ public class RootController {
 
     @GetMapping
     public EntryPointDto root() {
-        return new EntryPointDto().add(linkTo(methodOn(NotesController.class).getAllNotes()).withRel("Todas as notas"));
+        return new EntryPointDto()
+                .add(linkTo(methodOn(NotesController.class).getAllNotes())
+                        .withRel("Todas as notas"));
     }
 
 }
