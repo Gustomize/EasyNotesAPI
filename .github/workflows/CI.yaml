@@ -27,7 +27,7 @@ jobs:
         run: mvn -B clean package -DskipTests --file easy-notes/pom.xml
 
       - name: docker build
-        run: docker build -t gustosilva/easy-notes-api .
+        run: docker build -t gustosilva/easy-notes-api easy-notes/
 
       - name: docker login
         run: docker login -u ${{env.DOCKER_USER}} -p ${{env.DOCKER_TOKEN}}
